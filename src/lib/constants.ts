@@ -1,6 +1,6 @@
-export const APP_TITLE = "Acme";
-export const DATABASE_PREFIX = "acme";
-export const EMAIL_SENDER = '"Acme" <noreply@acme.com>';
+export const APP_TITLE = "CitySaver";
+export const DATABASE_PREFIX = "citysaver";
+export const EMAIL_SENDER = '"CitySaver" <noreply@citysaver.com>';
 
 export enum Paths {
   Home = "/",

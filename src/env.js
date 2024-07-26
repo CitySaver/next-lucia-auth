@@ -11,7 +11,7 @@ export const env = createEnv({
       .string()
       .url()
       .refine(
-        (str) => !str.includes("YOUR_DATABASE_URL_HERE"),
+        (str) => !str.includes("postgres://default:wmkIsB3tK8xW@ep-lucky-scene-a442m6y7-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require"),
         "You forgot to change the default URL",
       ),
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
