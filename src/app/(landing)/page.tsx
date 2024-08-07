@@ -19,12 +19,13 @@ import {
 import CardSpotlight from "./_components/hover-card";
 
 export const metadata: Metadata = {
-  title: "Next.js Lucia Auth Starter Template",
+  title: "City Saver",
   description:
-    "A Next.js starter template with nextjs and Lucia auth. Includes drizzle, trpc, react-email, tailwindcss and shadcn-ui",
+    "City Saver",
 };
 
-const githubUrl = "https://github.com/iamtouha/next-lucia-auth";
+const githubUrl = "#";
+//1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f
 
 const features = [
   {
@@ -74,33 +75,41 @@ const features = [
   },
 ];
 
-const HomePage = () => {
+async function getBrands(username: string) {
+  const res = await fetch(`https://city-saver.com/api/brands/`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+    },
+    });
+  return res.json()
+}
+export default async function HomePage({
+  params: { username },
+}: {
+  params: { username: string }
+}) {
+  // Initiate both requests in parallel
+  const artistData = getBrands(username)
+ 
+  // Wait for the promises to resolve
+  const [brands] = await Promise.all([artistData])
+
   return (
     <>
       <section className="mx-auto grid min-h-[calc(100vh-300px)] max-w-5xl flex-col  items-center justify-center gap-4 py-10 text-center  md:py-12">
         <div className="p-4">
-          <div className="mb-10 flex items-center justify-center gap-3">
-            <NextjsIcon className="h-[52px] w-[52px]" />
-            <PlusIcon className="h-8 w-8" />
-            <LuciaAuth className="h-14 w-14" />
-          </div>
           <h1 className="text-balance bg-gradient-to-tr  from-black/70 via-black to-black/60 bg-clip-text text-center text-3xl font-bold text-transparent dark:from-zinc-400/10 dark:via-white/90 dark:to-white/20  sm:text-5xl md:text-6xl lg:text-7xl">
-            Next.js Lucia Auth Starter Template
+            City Saver
           </h1>
           <p className="text-balance mb-10 mt-4 text-center text-muted-foreground md:text-lg lg:text-xl">
-            A Next.js Authentication starter template (password reset, email validation and oAuth).
-            Includes Lucia, Drizzle, tRPC, Stripe, tailwindcss, shadcn-ui and react-email.
+            Citysaver
           </p>
-          <div className="mb-10">
-            <div className="mx-auto max-w-[430px]">
-              <CopyToClipboard text={"git clone " + githubUrl} />
-            </div>
-          </div>
           <div className="flex justify-center gap-4">
             <Button size="lg" variant="outline" asChild>
               <a href={githubUrl}>
-                <GitHubLogoIcon className="mr-1 h-5 w-5" />
-                GitHub
+                Explore
               </a>
             </Button>
             <Button size="lg" asChild>
@@ -112,13 +121,22 @@ const HomePage = () => {
       <section>
         <div className="container mx-auto lg:max-w-screen-lg">
           <h1 className="mb-4 text-center text-3xl font-bold md:text-4xl lg:text-5xl">
-            <a id="features"></a> Features
+            <a id="features"></a> Brands
           </h1>
           <p className="text-balance mb-10 text-center text-muted-foreground md:text-lg lg:text-xl">
-            This starter template is a guide to help you get started with Next.js for large scale
-            applications. Feel free to add or remove features to suit your needs.
+            Brands
           </p>
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+            {brands.data.map((brand, i) => (
+              <CardSpotlight
+                key={i}
+                name={brand.name}
+                description={brand.address}
+                logo=''
+              />
+            ))}
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 hidden">
             {features.map((feature, i) => (
               <CardSpotlight
                 key={i}
@@ -133,8 +151,6 @@ const HomePage = () => {
     </>
   );
 };
-
-export default HomePage;
 
 function NextjsIcon({ className }: { className?: string }) {
   return (

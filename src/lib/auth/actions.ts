@@ -2,6 +2,7 @@
 
 /* eslint @typescript-eslint/no-explicit-any:0, @typescript-eslint/prefer-optional-chain:0 */
 
+import { useEffect } from 'react'
 import { z } from "zod";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -279,4 +280,149 @@ async function generatePasswordResetToken(userId: string): Promise<string> {
     expiresAt: createDate(new TimeSpan(2, "h")),
   });
   return tokenId;
+}
+
+export async function search(_: any, formData: FormData): Promise<string> {
+  const obj = Object.fromEntries(formData.entries());
+  let name = '';
+  var category = '';
+  var sub_category_id = '';
+  if(!obj.name ){
+    name = obj.name;
+  }
+  if(!obj.category ){
+    category = obj.category;
+  }
+  if(!obj.sub_category_id ){
+    sub_category_id = obj.sub_category_id;
+  }
+  const response = await fetch(`https://city-saver.com/api/brands/?filter[name]=${name}&filter[category_id]=${category}`, {
+  method: 'GET',
+  headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+  },
+  });
+  const brands = await response.json();
+  
+  return JSON.stringify(brands);
+  // const tokenId = generateId(40);
+  // return tokenId;
+}
+
+export async function searchpage(_: any, formData: FormData): Promise<string> {
+  const obj = Object.fromEntries(formData.entries());
+  let name = '';
+  var category = '';
+  var sub_category_id = '';
+  if(!obj.name ){
+    name = obj.name;
+  }
+  if(!obj.category ){
+    category = obj.category;
+  }
+  if(!obj.sub_category_id ){
+    sub_category_id = obj.sub_category_id;
+  }
+  const response = await fetch(`https://city-saver.com/api/brands/?filter[name]=${name}&filter[category_id]=${category}`, {
+  method: 'GET',
+  headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+  },
+  });
+  const brands = await response.json();
+  
+  return JSON.stringify(brands);
+  // const tokenId = generateId(40);
+  // return tokenId;
+}
+
+//fetchFilteredBrands
+export async function fetchFilteredBrands(
+  query: string,
+  currentPage: number,
+) {
+  try {
+    const response = await fetch(`https://city-saver.com/api/brands/?filter[name]=${`${query}`}&page=${currentPage}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+    },
+    });
+    const brands = await response.json();
+    
+    return brands.data;
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to fetch brands.');
+  }
+
+}
+
+//fetchFilteredBrandOne
+export async function fetchFilteredBrandOne(
+  brandid: string,
+  categoryid: string,
+) {
+  try {
+    const response = await fetch(`https://city-saver.com/api/brands/${brandid}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+    },
+    });
+    const brands = await response.json();
+    
+    return brands.data;
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to fetch brands.');
+  }
+
+}
+
+//fetchCategories
+export async function fetchCategories() {
+  try {
+    const response = await fetch(`https://city-saver.com/api/categories/`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer 2|UVgJZX6gtMGDDmMg6cE1eX45NAEbWTOgMPs7eqEx53d9daa1`, // 👈 New Code
+    },
+    });
+    const categories = await response.json();
+    
+    return categories.data;
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to fetch categories.');
+  }
+
+}
+
+const ITEMS_PER_PAGE = 15;
+export async function fetchFilteredBrandsTotalPages(query: string) {
+  try {
+    const response = await fetch(`https://city-saver.com/api/brands/?filter[name]=${`${query}`}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer 1|NQ3mh1aBsYWU6z3pkmFMWyE58e0oEEBkIUdXOalHe25d449f`, // 👈 New Code
+    },
+    });
+    const brands = await response.json();
+    
+    return Math.ceil(Number(brands.meta.total) / ITEMS_PER_PAGE);
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    throw new Error('Failed to fetch brands.');
+  }
 }
